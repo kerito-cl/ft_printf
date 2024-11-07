@@ -6,13 +6,13 @@
 /*   By: mquero <mquero@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:34:19 by mquero            #+#    #+#             */
-/*   Updated: 2024/10/30 16:15:09 by mquero           ###   ########.fr       */
+/*   Updated: 2024/11/07 16:13:51 by mquero           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fd(int n, int fd, int count)
 {
 	long int	k;
 	char		p;
@@ -31,8 +31,9 @@ void	ft_putnbr_fd(int n, int fd)
 	}
 	if (k > 9)
 	{
-		ft_putnbr_fd(k / 10, fd);
+		count = ft_putnbr_fd(k / 10, fd, count + 1);
 		rem = (k % 10) + '0';
 		write(fd, &rem, 1);
 	}
+	return (count);
 }

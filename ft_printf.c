@@ -1,134 +1,127 @@
 #include "./libft/libft.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdint.h>
 
-void	hexa_capital_putchar(int divisor)
+void	hexa_putchar(int divisor, char x)
 {
-	if (divisor > 9)
+	char	c;
+
+	c = divisor + 55;
+	if (divisor > 9 && x == 'X')
+		write(1, &c, 1);
+	else if (divisor > 9 && (x == 'x' || x == 'p'))
 	{
-		if (divisor == 10)
-			write(1, "A", 1);
-		else if (divisor == 11)
-			write(1, "B", 1);
-		else if (divisor == 12)
-			write(1, "C", 1);
-		else if (divisor == 13)
-			write(1, "D", 1);
-		else if (divisor == 14)
-			write(1, "E", 1);
-		else if (divisor == 15)
-			write(1, "F", 1);
+		c = ft_tolower(c);
+		write(1, &c, 1);
 	}
 	else if (divisor < 10)
-		ft_putnbr_fd(divisor, 1);
+		ft_putnbr_fd(divisor, 1, 1);
 }
-void	hexa_letter_putchar(int divisor)
-{
-	if (divisor > 9)
-	{
-		if (divisor == 10)
-			write(1, "a", 1);
-		else if (divisor == 11)
-			write(1, "b", 1);
-		else if (divisor == 12)
-			write(1, "c", 1);
-		else if (divisor == 13)
-			write(1, "d", 1);
-		else if (divisor == 14)
-			write(1, "e", 1);
-		else if (divisor == 15)
-			write(1, "f", 1);
-	}
-	else if (divisor < 10)
-		ft_putnbr_fd(divisor, 1);
-}
-void	ft_printhex(size_t p, char x)
-{
-	size_t	quotient;
-	int		i;
-	int		remainder;
 
-	i = 0;
+int	ft_printhex(uint64_t p, char x, int count)
+{
+	uint64_t	quotient;
+	uint64_t		remainder;
+
 	quotient = p;
 	remainder = quotient % 16;
 	if ((quotient / 16) != 0)
-	{
-		ft_printhex(quotient / 16, x);
-	}
-	if (x == 'x' || x == 'p')
-		hexa_letter_putchar(remainder);
-	else
-		hexa_capital_putchar(remainder);
+		count = ft_printhex(quotient / 16, x, count + 1);
+	hexa_putchar(remainder, x);
+	return (count);
 }
-int	ft_printf(const char *buffer, ...)
+
+
+int	ft_printf(const char *str, ...)
 {
 	size_t	i;
 	va_list	args;
 	char	*s;
+	int	count;
+	int	hold;
 
-	va_start(args, buffer);
+	va_start(args, str);
+	count = 0;
 	i = 0;
-	while (buffer[i] != '\0')
+	while (str[i] != '\0')
 	{
-		if (buffer[i] == '%')
+		if (str[i] == '%')
 		{
-			if (buffer[i + 1] == 'c')
+			if (str[i + 1] == 'c')
 			{
 				ft_putchar_fd(va_arg(args, int), 1);
+				count+= 1;
 				i++;
 			}
-			else if (buffer[i + 1] == 'd' || buffer[i + 1] == 'i')
+			else if (str[i + 1] == 'd' || str[i + 1] == 'i')
 			{
-				ft_putnbr_fd(va_arg(args, int), 1);
+				hold = va_arg(args, int);
+				count += ft_putnbr_fd(hold, 1, 1);
 				i++;
 			}
-			else if (buffer[i + 1] == 'u')
+			else if (str[i + 1] == 'u')
 			{
-				ft_putnbr_fd(va_arg(args, unsigned int), 1);
+				hold = va_arg(args, unsigned int);
+				count += ft_putnbr_fd(hold, 1, 1);
 				i++;
 			}
-			else if (buffer[i + 1] == 's')
+			else if (str[i + 1] == 's')
 			{
 				s = ft_strdup(va_arg(args, char *));
-				write(1, s, ft_strlen(s));
+				if (s == NULL)
+				{
+					write (1, "(null)", 6);
+					count += 6;
+				}
+				else
+				{
+					write(1, s, ft_strlen(s));
+					count+= ft_strlen(s);
+				}
 				free(s);
 				i++;
 			}
-			else if (buffer[i + 1] == 'p')
+			else if (str[i + 1] == 'p')
 			{
-				write(1, "0x", 2);
-				ft_printhex(va_arg(args, size_t), buffer[i + 1]);
+
+				s = va_arg(args, void *);
+				if (s == NULL)
+				{
+					write (1, "(nil)", 5);
+					count += 5;
+				}
+				else
+				{
+					write(1, "0x", 2);
+					count += ft_printhex((uintptr_t)s ,str[i + 1], 1) + 2;
+				}
 				i++;
 			}
-			else if (buffer[i + 1] == 'x' || buffer[i + 1] == 'X')
+			else if (str[i + 1] == 'x' || str[i + 1] == 'X')
 			{
-				ft_printhex(va_arg(args, size_t), buffer[i + 1]);
+				count += ft_printhex(va_arg(args, unsigned int), str[i + 1], 1);
 				i++;
 			}
 		}
 		else
-			ft_putchar_fd(buffer[i], 1);
+		{
+			ft_putchar_fd(str[i], 1);
+			count+=1;
+		}
 		i++;
 	}
 	va_end(args);
-	return (0);
+	return (count);
 }
-
 int	main(void)
 {
-	char			*s = "ver";
+	char			*s;
 	unsigned int	a;
 	int				b;
 
-	a = 1233435122;
-	b = 40967;
-	/*printf("%X\n", a);
-	printf("%X\n", b);
-	ft_printf("%X\n", a);
-	ft_printf("%X\n", b);*/
-
-	/*ft_printf("quiero %s si: %p, %c, %d crashea \n", s, s, 'd', 'a');
-	printf("quiero %s si: %p, %c, %d crashea \n", s, s, 'd', 'a') ;*/
-
-	ft_printf("%x", s);
+	b = printf("%s\n hola", s);
+	printf("%d\n", b);
+	b = ft_printf("%s\n hola", s);
+	ft_printf("%d\n", b);
 }
