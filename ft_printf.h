@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mquero <mquero@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/04 20:50:28 by mquero            #+#    #+#             */
-/*   Updated: 2024/11/05 11:22:06 by mquero           ###   ########.fr       */
+/*   Created: 2024/10/29 14:08:48 by mquero            #+#    #+#             */
+/*   Updated: 2024/11/08 12:11:29 by mquero           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+# include <stdarg.h>
+# include <stdint.h>
+# include <stdlib.h>
+# include <unistd.h>
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*temp;
+char	*ft_strdup(const char *s);
+size_t	ft_strlen(const char *str);
+int		ft_putnbr_fd(int64_t n, int fd, int count);
+int		ft_printhex(uint64_t p, char x, int count);
 
-	temp = *lst;
-	if (temp != NULL)
-	{
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = new;
-	}
-	else
-		*lst = new;
-}
+#endif

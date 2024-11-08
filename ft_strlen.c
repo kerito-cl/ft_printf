@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_striteri.c                                      :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mquero <mquero@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 12:44:35 by mquero            #+#    #+#             */
-/*   Updated: 2024/10/30 15:47:53 by mquero           ###   ########.fr       */
+/*   Created: 2024/10/29 11:38:31 by mquero            #+#    #+#             */
+/*   Updated: 2024/11/08 12:11:56 by mquero           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+#include "ft_printf.h"
+
+size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (s[i])
-	{
-		(*f)(i, &s[i]);
+	if (str == NULL)
+		return (0);
+	while (str[i])
 		i++;
-	}
+	return (i);
 }
