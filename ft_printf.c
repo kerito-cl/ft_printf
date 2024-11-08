@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
 void	print_int(const char *str, int64_t ar, size_t *i, int *count)
 {

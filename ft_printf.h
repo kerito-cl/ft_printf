@@ -21,5 +21,6 @@ char	*ft_strdup(const char *s);
 size_t	ft_strlen(const char *str);
 int		ft_putnbr_fd(int64_t n, int fd, int count);
 int		ft_printhex(uint64_t p, char x, int count);
+int		ft_printf(const char *str, ...);
 
 #endif
